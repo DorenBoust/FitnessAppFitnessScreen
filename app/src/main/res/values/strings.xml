@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">FitnessApp</string>
+    <string name="login_title">התחבר</string>
+    <string name="login_et_username">שם משתמש</string>
+    <string name="login_et_password">סיסמא</string>
+    <string name="login_btn_connection">התחבר</string>
+    <string name="login_click_to_register">אין לך חשבון? הירשם</string>
+    <string name="register_password_validation">אימות סיסמא</string>
+    <string name="regster_fitness_code">קוד התממשקות</string>
+    <string name="register_back_to_login_title">כבר יצרת חשבון? התחבר</string>
+    <string name="register_btn_create">צור משתמש</string>
+    <string name="register_et_email">מייל</string>
+</resources>

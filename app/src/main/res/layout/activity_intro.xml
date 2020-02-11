@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mainGreen"
+    tools:context=".IntroActivity">
+
+    <Button
+        android:id="@+id/intro_btn_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_login_custom_design"
+        android:fontFamily="@font/open_sans_hebrew_light"
+        android:text="הקודם"
+        android:textColor="@color/mainGreen"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/intro_btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="דלג"
+        android:textColor="@color/lightGreen"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/intro_btn_next"
+
+
+        app:layout_constraintEnd_toStartOf="@+id/intro_btn_back"
+        app:layout_constraintStart_toEndOf="@+id/intro_btn_next"
+        app:layout_constraintTop_toTopOf="@+id/intro_btn_next"
+        tools:visibility="invisible" />
+
+    <Button
+        android:id="@+id/intro_btn_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_login_custom_design"
+        android:fontFamily="@font/open_sans_hebrew_light"
+        android:text="הבא"
+        android:textColor="@color/mainGreen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/intro_btn_start"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/btn_into_start_custom_design"
+        android:fontFamily="@font/open_sans_hebrew_bold"
+        android:text="התחל"
+        android:textColor="@color/waite"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/intro_btn_back"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <FrameLayout
+        android:id="@+id/introMFragment"
+        android:layout_width="409dp"
+        android:layout_height="665dp"
+        app:layout_constraintBottom_toTopOf="@+id/intro_btn_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mainGreen"
+    tools:context=".loginAndRegisterAnimated.LoginAniFragment">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/username_login"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColorHint="@color/waite"
+        app:hintTextAppearance="@style/MyHintStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_login_title">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#97E6B8"
+            android:fontFamily="@font/open_sans_hebrew_light"
+            android:gravity="center"
+            android:hint="@string/register_et_email"
+            android:inputType="textEmailAddress"
+            android:paddingBottom="20dp"
+            android:textColor="@color/waite"
+            android:textColorHint="@color/waite"
+            android:textSize="14sp"
+
+            />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/password_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColorHint="@color/waite"
+        app:hintTextAppearance="@style/MyHintStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_login">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#97E6B8"
+            android:fontFamily="@font/open_sans_hebrew_light"
+            android:gravity="center"
+            android:hint="@string/login_et_password"
+            android:inputType="textPassword"
+            android:paddingBottom="20dp"
+            android:textColor="@color/waite"
+            android:textColorHint="@color/waite"
+
+            android:textSize="14sp" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordvalidation_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColorHint="@color/waite"
+        app:hintTextAppearance="@style/MyHintStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_register">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#97E6B8"
+            android:fontFamily="@font/open_sans_hebrew_light"
+            android:gravity="center"
+            android:hint="@string/register_password_validation"
+            android:inputType="textPassword"
+            android:paddingBottom="20dp"
+            android:textColor="@color/waite"
+            android:textColorHint="@color/waite"
+            android:textSize="14sp"
+
+            />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/validation_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:textColorHint="@color/waite"
+        app:hintTextAppearance="@style/MyHintStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/passwordvalidation_register">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#97E6B8"
+            android:fontFamily="@font/open_sans_hebrew_light"
+            android:gravity="center"
+            android:hint="@string/regster_fitness_code"
+            android:inputType="textPassword"
+            android:paddingBottom="20dp"
+            android:textColor="@color/waite"
+            android:textColorHint="@color/waite"
+            android:textSize="14sp"
+
+            />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <TextView
+        android:id="@+id/tv_login_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_hebrew_bold"
+        android:text="צור משתמש חדש"
+        android:textColor="@color/waite"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_login_create_account"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/btn_login_custom_design"
+        android:text="@string/register_btn_create"
+        android:textColor="@color/mainGreen"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/validation_register" />
+
+    <TextView
+        android:id="@+id/tv_register_click_to_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="@string/register_back_to_login_title"
+        android:textColor="@color/waite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_login_create_account" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_middle_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.37" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/register_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_login_create_account"
+        app:layout_constraintEnd_toEndOf="@+id/btn_login_create_account"
+        app:layout_constraintStart_toStartOf="@+id/btn_login_create_account"
+        app:layout_constraintTop_toTopOf="@+id/btn_login_create_account"
+        app:lottie_rawRes="@raw/new_animation_register"
+
+         />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
