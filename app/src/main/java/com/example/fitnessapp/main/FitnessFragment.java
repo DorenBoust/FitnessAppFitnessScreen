@@ -175,7 +175,7 @@ public class FitnessFragment extends Fragment {
         tvMainNumberOfEx.setText(String.valueOf(exercises.size()));
 
         long hours = TimeUnit.MILLISECONDS.toHours(restTime);
-        long min = TimeUnit.MILLISECONDS.toMinutes(restTime);
+        long min = TimeUnit.MILLISECONDS.toMinutes(restTime) - (hours*60);
         String minString = String.valueOf(min);
         String hourString = String.valueOf(hours);
         String total;
