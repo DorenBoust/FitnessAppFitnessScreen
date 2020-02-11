@@ -21,6 +21,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.fitnessapp.R;
 import com.example.fitnessapp.keys.KeysUserFragment;
 import com.example.fitnessapp.user.Day;
@@ -56,6 +57,9 @@ public class FitnessFragment extends Fragment {
 
     //layouts
     private ConstraintLayout mainDayLayout;
+    private ConstraintLayout mainDayLayoutDayOff;
+    private TextView dayOffName;
+    private LottieAnimationView lottieAnimationDayOff;
 
 
     public static FitnessFragment newInstance() {
@@ -77,6 +81,9 @@ public class FitnessFragment extends Fragment {
         correctDay = sdf.format(date).toLowerCase();
 
         mainDayLayout = v.findViewById(R.id.fitness_main_ex_layout);
+        mainDayLayoutDayOff = v.findViewById(R.id.fitness_main_ex_layout_dayOff);
+        dayOffName = v.findViewById(R.id.fitness_tv_dayoff_dayName);
+        lottieAnimationDayOff = v.findViewById(R.id.lottie_dayOff);
 
 
 
@@ -113,12 +120,39 @@ public class FitnessFragment extends Fragment {
         }
 
         if (!findDayName.contains(correctDay)){
+            switch (correctDay){
+                case "sunday":
+                    dayOffName.setText("יום ראשון");
+                    break;
+                case "monday":
+                    dayOffName.setText("יום שני");
+                    break;
+                case "tuesday":
+                    dayOffName.setText("יום שלישי");
+                    break;
+                case "wednesday":
+                    dayOffName.setText("יום רביעי");
+                    break;
+                case "thursday":
+                    dayOffName.setText("יום חמישי");
+                    break;
+                case "friday":
+                    dayOffName.setText("יום שישי");
+                    break;
+                case "saturday":
+                    dayOffName.setText("יום שבת");
+                    break;
+
+            }
+            lottieAnimationDayOff.playAnimation();
             mainDayLayout.setVisibility(View.INVISIBLE);
+            mainDayLayoutDayOff.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.enter_bottom_to_top));
             return;
         }
 
         for (Day day : daysList) {
             if (day.getDayName().equals(correctDay)){
+                mainDayLayoutDayOff.setVisibility(View.INVISIBLE);
                 mainDayLayout.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.enter_bottom_to_top));
                 switch (day.getDayName()){
                     case "sunday":
