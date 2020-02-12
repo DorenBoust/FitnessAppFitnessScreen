@@ -10,4 +10,7 @@
     <string name="register_back_to_login_title">כבר יצרת חשבון? התחבר</string>
     <string name="register_btn_create">צור משתמש</string>
     <string name="register_et_email">מייל</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

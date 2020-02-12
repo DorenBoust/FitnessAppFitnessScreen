@@ -3,12 +3,14 @@ package com.example.fitnessapp.main;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.media.Image;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.CountDownTimer;
 import android.view.Gravity;
@@ -16,19 +18,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.fitnessapp.MainActivity;
 import com.example.fitnessapp.R;
+import com.example.fitnessapp.keys.KeysIntents;
 import com.example.fitnessapp.keys.KeysUserFragment;
+import com.example.fitnessapp.models.CustomMethods;
 import com.example.fitnessapp.user.Day;
 import com.example.fitnessapp.user.Exercise;
 import com.example.fitnessapp.user.User;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +56,7 @@ public class FitnessFragment extends Fragment {
     private TextSwitcher switcherInnerExNumber;
     private TextView tvInnerExNumberTEXTVIEW;
     private ImageView ivInnerImage;
+    private Button btnMainStart;
 
     //correct day
     private SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
@@ -60,6 +68,8 @@ public class FitnessFragment extends Fragment {
     private ConstraintLayout mainDayLayoutDayOff;
     private TextView dayOffName;
     private LottieAnimationView lottieAnimationDayOff;
+
+
 
 
     public static FitnessFragment newInstance() {
@@ -74,6 +84,7 @@ public class FitnessFragment extends Fragment {
         tvMainDayName = v.findViewById(R.id.tv_fitness_main_ex_day_name);
         tvMainNumberOfEx = v.findViewById(R.id.tv_fitness_main_ex_day_inner_exNumber);
         tvMainEsTime = v.findViewById(R.id.tv_fitness_main_ex_day_esTime);
+        btnMainStart = v.findViewById(R.id.fitness_btn_start);
         switcherInnerExName = v.findViewById(R.id.tv_fitness_main_ex_day_exName);
         switcherInnerExNumber = v.findViewById(R.id.tv_fitness_main_ex_day_exNumber);
         ivInnerImage = v.findViewById(R.id.iv_fitness_main_ex_day_image);
@@ -88,16 +99,37 @@ public class FitnessFragment extends Fragment {
 
 
 
+
         user = (User) getArguments().getSerializable(KeysUserFragment.USER_DATA_TO_FRAGMENT);
         days = user.getDays();
 
         mainDayEx(days);
 
+        //recyclerView
+        final RecyclerView recyclerView = v.findViewById(R.id.fitness_recyclerView);
+        FitnessDaysRecyclerAdapter adapter = new FitnessDaysRecyclerAdapter(days,getLayoutInflater());
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+
+        //start Button on main ex
+        btnMainStart.setOnClickListener(btn->{
+            List<Exercise> exercisesData = new ArrayList<>();
+            String sendDayName = "";
+            for (int i = 0; i < days.size() ; i++) {
+                Day day = days.get(i);
+                String dayName = day.getDayName();
+                if (dayName.equals(correctDay)){
+                    exercisesData = day.getExercises();
+                    sendDayName = dayName;
+                }
+            }
 
 
-
-
-
+            Intent intent = new Intent(getContext(), ExersiceActivity.class);
+            intent.putExtra(KeysIntents.EX_LIST, (Serializable) exercisesData);
+            intent.putExtra(KeysIntents.DAY_NAME, sendDayName);
+            startActivity(intent);
+        });
 
         return v;
     }
@@ -120,70 +152,75 @@ public class FitnessFragment extends Fragment {
         }
 
         if (!findDayName.contains(correctDay)){
-            switch (correctDay){
-                case "sunday":
-                    dayOffName.setText("יום ראשון");
-                    break;
-                case "monday":
-                    dayOffName.setText("יום שני");
-                    break;
-                case "tuesday":
-                    dayOffName.setText("יום שלישי");
-                    break;
-                case "wednesday":
-                    dayOffName.setText("יום רביעי");
-                    break;
-                case "thursday":
-                    dayOffName.setText("יום חמישי");
-                    break;
-                case "friday":
-                    dayOffName.setText("יום שישי");
-                    break;
-                case "saturday":
-                    dayOffName.setText("יום שבת");
-                    break;
+//            switch (correctDay){
+//                case "sunday":
+//                    dayOffName.setText("יום ראשון");
+//                    break;
+//                case "monday":
+//                    dayOffName.setText("יום שני");
+//                    break;
+//                case "tuesday":
+//                    dayOffName.setText("יום שלישי");
+//                    break;
+//                case "wednesday":
+//                    dayOffName.setText("יום רביעי");
+//                    break;
+//                case "thursday":
+//                    dayOffName.setText("יום חמישי");
+//                    break;
+//                case "friday":
+//                    dayOffName.setText("יום שישי");
+//                    break;
+//                case "saturday":
+//                    dayOffName.setText("יום שבת");
+//                    break;
+//
+//            }
 
-            }
+            dayOffName.setText(CustomMethods.convertDateToHebrew(correctDay));
             lottieAnimationDayOff.playAnimation();
             mainDayLayout.setVisibility(View.INVISIBLE);
             mainDayLayoutDayOff.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.enter_bottom_to_top));
             return;
         }
 
+        //have practice
         for (Day day : daysList) {
             if (day.getDayName().equals(correctDay)){
                 mainDayLayoutDayOff.setVisibility(View.INVISIBLE);
                 mainDayLayout.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.enter_bottom_to_top));
-                switch (day.getDayName()){
-                    case "sunday":
-                        tvMainDayName.setText("יום ראשון");
-                        getInnerExParameters(day);
-                        break;
-                    case "monday":
-                        tvMainDayName.setText("יום שני");
-                        getInnerExParameters(day);
-                        break;
-                    case "tuesday":
-                        tvMainDayName.setText("יום שלישי");
-                        getInnerExParameters(day);
-                        break;
-                    case "wednesday":
-                        tvMainDayName.setText("יום רביעי");
-                        getInnerExParameters(day);
-                        break;
-                    case "thursday":
-                        tvMainDayName.setText("יום חמישי");
-                        getInnerExParameters(day);
-                        break;
-                    case "friday":
-                        tvMainDayName.setText("יום שישי");
-                        getInnerExParameters(day);
-                        break;
-                    case "saturday":
-                        tvMainDayName.setText("יום שבת");
-                        getInnerExParameters(day);
-                        break;
-                }
+//                switch (day.getDayName()){
+//                    case "sunday":
+//                        tvMainDayName.setText("יום ראשון");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "monday":
+//                        tvMainDayName.setText("יום שני");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "tuesday":
+//                        tvMainDayName.setText("יום שלישי");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "wednesday":
+//                        tvMainDayName.setText("יום רביעי");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "thursday":
+//                        tvMainDayName.setText("יום חמישי");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "friday":
+//                        tvMainDayName.setText("יום שישי");
+//                        getInnerExParameters(day);
+//                        break;
+//                    case "saturday":
+//                        tvMainDayName.setText("יום שבת");
+//                        getInnerExParameters(day);
+//                        break;
+//                }
+                tvMainDayName.setText(CustomMethods.convertDateToHebrew(day.getDayName()));
+                getInnerExParameters(day);
             }
         }
     }
@@ -194,7 +231,6 @@ public class FitnessFragment extends Fragment {
         List<String> exImages = new ArrayList<>();
         List<String> exNumber = new ArrayList<>();
         long restTime = 0;
-        long exTime = 0;
         for (int i = 0; i <exercises.size() ; i++) {
             exNameList.add(exercises.get(i).getExName());
             exImages.add(exercises.get(i).getImage());
@@ -208,23 +244,9 @@ public class FitnessFragment extends Fragment {
 
         tvMainNumberOfEx.setText(String.valueOf(exercises.size()));
 
-        long hours = TimeUnit.MILLISECONDS.toHours(restTime);
-        long min = TimeUnit.MILLISECONDS.toMinutes(restTime) - (hours*60);
-        String minString = String.valueOf(min);
-        String hourString = String.valueOf(hours);
-        String total;
-
-//        tvInnerExName.setText(exNameList.get(0));
-//        tvInnerExNumber.setText(exNumber.get(0));
-//        Picasso.get().load(exImages.get(0)).into(ivInnerImage);
-
-        if (min < 10){
-            total = hourString + ":0" + min;
-            tvMainEsTime.setText(String.valueOf(total));
-        } else {
-            total = hourString + ":" + min;
-            tvMainEsTime.setText(String.valueOf(total));
-        }
+        //es time
+        String esTime = CustomMethods.getEsTime(restTime);
+        tvMainEsTime.setText(String.valueOf(esTime));
 
 
         CountDownTimer countDownTimer = new CountDownTimer(exercises.size() * 3_000, 3000) {

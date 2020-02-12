@@ -10,7 +10,8 @@
         android:id="@+id/fitness_main_ex_layout_dayOff"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@drawable/background_main_fitness_day"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/background_main_fitness_dayoff"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
@@ -47,8 +48,7 @@
                 android:id="@+id/lottie_dayOff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:lottie_rawRes="@raw/day_off">
-            </com.airbnb.lottie.LottieAnimationView>
+                app:lottie_rawRes="@raw/day_off"></com.airbnb.lottie.LottieAnimationView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -71,19 +71,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.48" />
+        app:layout_constraintGuide_percent="0.55" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fitness_main_ex_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/background_main_fitness_day"
         app:layout_constraintBottom_toTopOf="@+id/guideline20"
         app:layout_constraintEnd_toStartOf="@+id/guideline19"
         app:layout_constraintStart_toStartOf="@+id/guideline18"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="invisible">
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/tv_fitness_main_ex_day_name"
@@ -103,7 +103,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_hebrew_bold"
             android:text="0:45"
-            android:textColor="@color/lightGreen"
+            android:textColor="@color/waite"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline22"
@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_hebrew_bold"
             android:text="6"
-            android:textColor="@color/lightGreen"
+            android:textColor="@color/waite"
             android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline22"
             app:layout_constraintStart_toStartOf="parent"
@@ -240,7 +240,7 @@
             app:layout_constraintGuide_percent="0.5" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/fitness_btn_start"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -255,5 +255,15 @@
             app:layout_constraintStart_toStartOf="@+id/fitness_main_ex_layout_inner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fitness_recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fitness_main_ex_layout_dayOff" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
