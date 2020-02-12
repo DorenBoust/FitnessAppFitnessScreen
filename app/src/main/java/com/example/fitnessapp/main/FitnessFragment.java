@@ -152,31 +152,6 @@ public class FitnessFragment extends Fragment {
         }
 
         if (!findDayName.contains(correctDay)){
-//            switch (correctDay){
-//                case "sunday":
-//                    dayOffName.setText("יום ראשון");
-//                    break;
-//                case "monday":
-//                    dayOffName.setText("יום שני");
-//                    break;
-//                case "tuesday":
-//                    dayOffName.setText("יום שלישי");
-//                    break;
-//                case "wednesday":
-//                    dayOffName.setText("יום רביעי");
-//                    break;
-//                case "thursday":
-//                    dayOffName.setText("יום חמישי");
-//                    break;
-//                case "friday":
-//                    dayOffName.setText("יום שישי");
-//                    break;
-//                case "saturday":
-//                    dayOffName.setText("יום שבת");
-//                    break;
-//
-//            }
-
             dayOffName.setText(CustomMethods.convertDateToHebrew(correctDay));
             lottieAnimationDayOff.playAnimation();
             mainDayLayout.setVisibility(View.INVISIBLE);
@@ -189,36 +164,6 @@ public class FitnessFragment extends Fragment {
             if (day.getDayName().equals(correctDay)){
                 mainDayLayoutDayOff.setVisibility(View.INVISIBLE);
                 mainDayLayout.setAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.enter_bottom_to_top));
-//                switch (day.getDayName()){
-//                    case "sunday":
-//                        tvMainDayName.setText("יום ראשון");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "monday":
-//                        tvMainDayName.setText("יום שני");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "tuesday":
-//                        tvMainDayName.setText("יום שלישי");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "wednesday":
-//                        tvMainDayName.setText("יום רביעי");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "thursday":
-//                        tvMainDayName.setText("יום חמישי");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "friday":
-//                        tvMainDayName.setText("יום שישי");
-//                        getInnerExParameters(day);
-//                        break;
-//                    case "saturday":
-//                        tvMainDayName.setText("יום שבת");
-//                        getInnerExParameters(day);
-//                        break;
-//                }
                 tvMainDayName.setText(CustomMethods.convertDateToHebrew(day.getDayName()));
                 getInnerExParameters(day);
             }

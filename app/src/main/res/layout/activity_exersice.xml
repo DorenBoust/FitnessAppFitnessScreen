@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/open_sans_hebrew_bold"
-            android:text="יום שלישי"
+            android:text="יום שלישי 17/05/19 "
             app:layout_constraintBottom_toTopOf="@+id/guideline28"
             app:layout_constraintEnd_toStartOf="@+id/guideline29"
             app:layout_constraintStart_toStartOf="@+id/guideline29"
@@ -52,7 +52,7 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="@font/open_sans_hebrew_light"
             android:text="אימון"
             app:layout_constraintEnd_toEndOf="@+id/tv_ex_activity_title_day"
@@ -69,6 +69,8 @@
         android:text="יד קידמית"
         android:textColor="@color/mainGreen"
         android:textSize="16sp"
+        android:inAnimation="@anim/faidin"
+        android:outAnimation="@anim/faidout"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintStart_toStartOf="@+id/guideline32"
         app:layout_constraintTop_toTopOf="@+id/guideline23" />
@@ -95,6 +97,8 @@
         android:text="תרגיל 3"
         android:textColor="@color/mainGreen"
         android:textSize="12sp"
+        android:inAnimation="@anim/faidin"
+        android:outAnimation="@anim/faidout"
         app:layout_constraintEnd_toEndOf="@+id/tv_ex_activity_title_exName"
         app:layout_constraintStart_toStartOf="@+id/tv_ex_activity_title_exName"
         app:layout_constraintTop_toTopOf="@+id/tv_ex_activity_title_exName" />
@@ -246,9 +250,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="40dp"
             android:fontFamily="@font/open_sans_hebrew_regular"
-            android:text="אין"
-            app:layout_constraintEnd_toEndOf="@+id/textView9"
-            app:layout_constraintStart_toStartOf="@+id/textView9"
+            android:text="איןאין אין אין אין אין אין איןאין אין אין אין אין אין "
+            app:layout_constraintEnd_toStartOf="@+id/guideline39"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
         <TextView
