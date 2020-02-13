@@ -1,14 +1,22 @@
 package com.example.fitnessapp.main;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,16 +26,19 @@ import com.example.fitnessapp.models.CustomMethods;
 import com.example.fitnessapp.user.Exercise;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+
+import static com.example.fitnessapp.models.AppNotification.CHANNEL_1_ID;
 
 public class ExersiceActivity extends AppCompatActivity {
 
+    //navigation ex btn
     private ImageView btnNext;
     private ImageView btnBack;
+    private boolean crash = true;
+
     private TextView tvSets;
     private TextView tvRepit;
     private TextView tvNote;
@@ -37,6 +48,21 @@ public class ExersiceActivity extends AppCompatActivity {
     private TextView tvDay;
     private ImageView ivMainImage;
     private int counterEx = 0;
+
+
+    //timer
+    private TextView tvTimer;
+    private Button btnTimerStop;
+    private Button btnTimerStart;
+    private Button btnTimerResume;
+    private Button btnTimerClear;
+    private long timerTime;
+    private CountDownTimer timerCount;
+    private boolean mTimerRunning;
+    private long mTimerLeft;
+    //notification
+    private NotificationManagerCompat notificationManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +80,12 @@ public class ExersiceActivity extends AppCompatActivity {
         tvExNumber = findViewById(R.id.tv_ex_activity_title_exNumber);
         ivMainImage = findViewById(R.id.iv_ex_activity_details_exImage);
 
-
-
+        tvTimer = findViewById(R.id.ex_activity_timer);
+        btnTimerStart = findViewById(R.id.ex_activity_timerStart);
+        btnTimerStop = findViewById(R.id.ex_activity_timerStop);
+        btnTimerResume = findViewById(R.id.ex_activity_timerResume);
+        btnTimerClear = findViewById(R.id.ex_activity_timerClear);
+        notificationManager = NotificationManagerCompat.from(this);
 
 
         //get data
@@ -63,63 +93,192 @@ public class ExersiceActivity extends AppCompatActivity {
         List<Exercise> exercises = (List<Exercise>) intent.getSerializableExtra(KeysIntents.EX_LIST);
         String dayName = intent.getStringExtra(KeysIntents.DAY_NAME);
 
+        System.out.println("counter number " + counterEx);
+        timerTime = exercises.get(counterEx).getRest();
+        mTimerLeft = timerTime;
+
+
+
         //regular component
         regularComponents(exercises,dayName);
 
         //recycler
-        Exercise exercise = exercises.get(0);
+        Exercise exercise = exercises.get(counterEx);
         RecyclerView recyclerView = findViewById(R.id.tv_ex_activity_details_recycler);
         ExersiceFieldRecyclerAdapter adapter = new ExersiceFieldRecyclerAdapter(exercise,getLayoutInflater());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        //navigation arrow btn
         btnNext.setOnClickListener(v->{
-            //change recycler
-            Exercise exerciseIN = exercises.get(++counterEx);
-            ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN,getLayoutInflater());
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapterIN);
+            if (crash) {
+                crash = false;
 
-            //regular Component
-            regularComponents(exercises,dayName);
+                //change recycler
+                Exercise exerciseIN = exercises.get(++counterEx);
+                ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(adapterIN);
 
-            //display arrow
-            if (counterEx == exercises.size()-1){
+                //regular Component
+                regularComponents(exercises, dayName);
 
-                btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
-                btnNext.setVisibility(View.INVISIBLE);
-                return;
-            } else {
-                btnNext.setAnimation(AnimationUtils.loadAnimation(this,R.anim.ex_activity_next_button));
+                //display arrow
+                if (counterEx == exercises.size() - 1) {
+
+                    btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
+                    btnNext.setVisibility(View.INVISIBLE);
+                } else {
+                    btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.ex_activity_next_button));
+                }
+
+                if (counterEx == 1){
+                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
+                    btnBack.setVisibility(View.VISIBLE);
+                }
+
+                btnNext.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        crash = true;
+                    }
+                }, 500);
             }
-            if (counterEx != 0){
-                btnBack.setVisibility(View.VISIBLE);
-            }
+
+
+
         });
-
-
         btnBack.setOnClickListener(v->{
-            //change recycler
-            Exercise exerciseIN = exercises.get(--counterEx);
-            ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN,getLayoutInflater());
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(adapterIN);
+            if (crash) {
+                crash = false;
+                //change recycler
+                Exercise exerciseIN = exercises.get(--counterEx);
+                ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
+                recyclerView.setLayoutManager(new LinearLayoutManager(this));
+                recyclerView.setAdapter(adapterIN);
 
-            //regular Component
-            regularComponents(exercises,dayName);
+                //regular Component
+                regularComponents(exercises, dayName);
 
 
-            //display arrow
-            if (counterEx == 0){
-                btnBack.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidout));
-                btnBack.setVisibility(View.INVISIBLE);
-                return;
-            } else {
-                btnBack.setAnimation(AnimationUtils.loadAnimation(this,R.anim.ex_activity_back_button));
+                //display arrow
+                if (counterEx == 0) {
+                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
+                    btnBack.setVisibility(View.INVISIBLE);
+                } else {
+                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.ex_activity_back_button));
+                }
+
+                if (counterEx == exercises.size() - 2){
+                    btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
+                    btnNext.setVisibility(View.VISIBLE);
+                }
+
+                btnBack.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        crash = true;
+                    }
+                }, 500);
             }
-            btnNext.setVisibility(View.VISIBLE);
+
         });
 
+        //timer
+        btnTimerStart.setOnClickListener(btn->{
+            if (mTimerRunning){
+                stopTimer();
+            }else {
+                startTimer();
+            }
+        });
+        btnTimerStop.setOnClickListener(btn->{
+            stopTimer();
+        });
+        btnTimerClear.setOnClickListener(btn->{
+            clearTimer();
+        });
+        btnTimerResume.setOnClickListener(btn->{
+            startTimer();
+            btnTimerClear.setVisibility(View.INVISIBLE);
+            btnTimerResume.setVisibility(View.INVISIBLE);
+        });
+        updateTimerText();
+
+
+    }
+
+
+
+    private void startTimer(){
+        timerCount = new CountDownTimer(mTimerLeft,1_000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mTimerLeft = millisUntilFinished;
+                updateTimerText();
+                btnTimerStart.setVisibility(View.INVISIBLE);
+                btnTimerStop.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFinish() {
+                mTimerRunning = false;
+                btnTimerStart.setVisibility(View.VISIBLE);
+                btnTimerStop.setVisibility(View.INVISIBLE);
+                clearTimer();
+                sendTimerNotification();
+
+            }
+        }.start();
+
+        mTimerRunning = true;
+        btnTimerStart.setVisibility(View.INVISIBLE);
+        btnTimerStop.setVisibility(View.VISIBLE);
+    }
+    private void stopTimer(){
+        timerCount.cancel();
+        mTimerRunning = false;
+        btnTimerStop.setVisibility(View.INVISIBLE);
+        btnTimerResume.setVisibility(View.VISIBLE);
+        btnTimerClear.setVisibility(View.VISIBLE);
+
+
+
+    }
+    private void clearTimer(){
+        mTimerLeft = timerTime;
+        updateTimerText();
+        btnTimerResume.setVisibility(View.INVISIBLE);
+        btnTimerClear.setVisibility(View.INVISIBLE);
+        btnTimerStart.setVisibility(View.VISIBLE);
+    }
+    private void updateTimerText(){
+        int minute = (int) (mTimerLeft / 1000) / 60;
+        int seconds = (int) (mTimerLeft / 1000) % 60;
+
+        String timerLeftFprmat = String.format(Locale.getDefault(),"%02d:%02d", minute,seconds);
+        tvTimer.setText(timerLeftFprmat);
+    }
+    public void  sendTimerNotification(){
+
+
+        Drawable drawable = ivMainImage.getDrawable();
+        Bitmap picNotificatio = ((BitmapDrawable)drawable).getBitmap();
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_notification_ex_timer)
+                .setContentTitle(tvExName.getText())
+                .setStyle(new NotificationCompat.BigPictureStyle()
+                        .bigPicture(picNotificatio)
+                        .bigLargeIcon(picNotificatio))
+                .setContentText("המנוחה נגמרה, הגיע הזמן לחזור להתאמן!")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setColor(getResources().getColor(R.color.mainGreen))
+                .setAutoCancel(true)
+                .build();
+
+        notificationManager.notify(1,notification);
 
     }
 
@@ -133,9 +292,19 @@ public class ExersiceActivity extends AppCompatActivity {
         tvExNumber.setText(tvExNumberString);
         tvNote.setText(String.valueOf(exercises.get(counterEx).getNotes()));
         noteColor(exercises,counterEx);
+        //timer
+        if (mTimerRunning) {
+            timerCount.cancel();
+        }
+        timerTime = exercises.get(counterEx).getRest();
+        mTimerLeft = timerTime;
+        mTimerRunning = false;
+        btnTimerStop.setVisibility(View.INVISIBLE);
+        btnTimerStart.setVisibility(View.VISIBLE);
+        updateTimerText();
+
 
     }
-
     private void noteColor(List<Exercise> exercises, int counterEx){
         if (!exercises.get(counterEx).getNotes().equals("אין")){
             tvNote.setTextColor(getResources().getColor(R.color.mainRed));

@@ -66,11 +66,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/open_sans_hebrew_bold"
+        android:inAnimation="@anim/faidin"
+        android:outAnimation="@anim/faidout"
         android:text="יד קידמית"
         android:textColor="@color/mainGreen"
         android:textSize="16sp"
-        android:inAnimation="@anim/faidin"
-        android:outAnimation="@anim/faidout"
         app:layout_constraintEnd_toStartOf="@+id/guideline30"
         app:layout_constraintStart_toStartOf="@+id/guideline32"
         app:layout_constraintTop_toTopOf="@+id/guideline23" />
@@ -94,11 +94,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/open_sans_hebrew_light"
+        android:inAnimation="@anim/faidin"
+        android:outAnimation="@anim/faidout"
         android:text="תרגיל 3"
         android:textColor="@color/mainGreen"
         android:textSize="12sp"
-        android:inAnimation="@anim/faidin"
-        android:outAnimation="@anim/faidout"
         app:layout_constraintEnd_toEndOf="@+id/tv_ex_activity_title_exName"
         app:layout_constraintStart_toStartOf="@+id/tv_ex_activity_title_exName"
         app:layout_constraintTop_toTopOf="@+id/tv_ex_activity_title_exName" />
@@ -274,6 +274,7 @@
         app:layout_constraintGuide_percent="0.41" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -300,5 +301,87 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.7414501" />
+
+    <TextView
+        android:id="@+id/ex_activity_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="00:00"
+        android:textColor="@color/mainRed"
+        android:textSize="50sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline45" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.83" />
+
+    <Button
+        android:id="@+id/ex_activity_timerStart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/btn_login_custom_design"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="התחל מנוחה"
+        android:textColor="@color/mainGreen"
+        app:layout_constraintEnd_toEndOf="@+id/ex_activity_timer"
+        app:layout_constraintStart_toStartOf="@+id/ex_activity_timer"
+        app:layout_constraintTop_toBottomOf="@+id/ex_activity_timer" />
+
+    <Button
+        android:id="@+id/ex_activity_timerStop"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/btn_timer_stop"
+        android:text="עצור"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/ex_activity_timer"
+        app:layout_constraintStart_toStartOf="@+id/ex_activity_timer"
+        app:layout_constraintTop_toBottomOf="@+id/ex_activity_timer" />
+
+    <Button
+        android:id="@+id/ex_activity_timerResume"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/btn_login_custom_design"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="המשך"
+        android:textColor="@color/mainGreen"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/guideline46"
+        app:layout_constraintStart_toStartOf="@+id/ex_activity_timer"
+        app:layout_constraintTop_toBottomOf="@+id/ex_activity_timer" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline46"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <Button
+        android:id="@+id/ex_activity_timerClear"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:textColor="@color/mainGreen"
+        android:background="@drawable/btn_timer_clear"
+        android:visibility="invisible"
+        android:text="אפס"
+        app:layout_constraintEnd_toEndOf="@+id/ex_activity_timer"
+        app:layout_constraintStart_toStartOf="@+id/guideline46"
+        app:layout_constraintTop_toBottomOf="@+id/ex_activity_timer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

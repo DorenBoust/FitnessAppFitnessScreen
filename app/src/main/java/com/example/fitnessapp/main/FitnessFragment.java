@@ -72,6 +72,7 @@ public class FitnessFragment extends Fragment {
 
 
 
+
     public static FitnessFragment newInstance() {
         return new FitnessFragment();
     }
@@ -95,7 +96,6 @@ public class FitnessFragment extends Fragment {
         mainDayLayoutDayOff = v.findViewById(R.id.fitness_main_ex_layout_dayOff);
         dayOffName = v.findViewById(R.id.fitness_tv_dayoff_dayName);
         lottieAnimationDayOff = v.findViewById(R.id.lottie_dayOff);
-
 
 
 
