@@ -17,17 +17,28 @@ import android.os.CountDownTimer;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fitnessapp.R;
+import com.example.fitnessapp.keys.KeysFirebaseStore;
 import com.example.fitnessapp.keys.KeysIntents;
 import com.example.fitnessapp.models.CustomMethods;
 import com.example.fitnessapp.user.Exercise;
+import com.example.fitnessapp.user.ExerciseHistory;
+import com.example.fitnessapp.user.ExersixeOneRawHistory;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 import static com.example.fitnessapp.models.AppNotification.CHANNEL_1_ID;
@@ -60,8 +71,14 @@ public class ExersiceActivity extends AppCompatActivity {
     private CountDownTimer timerCount;
     private boolean mTimerRunning;
     private long mTimerLeft;
+
     //notification
     private NotificationManagerCompat notificationManager;
+
+    //recyclerview
+    private RecyclerView recyclerViewComponent;
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -87,13 +104,13 @@ public class ExersiceActivity extends AppCompatActivity {
         btnTimerClear = findViewById(R.id.ex_activity_timerClear);
         notificationManager = NotificationManagerCompat.from(this);
 
+        recyclerViewComponent = findViewById(R.id.tv_ex_activity_details_recycler);
 
         //get data
         Intent intent = getIntent();
         List<Exercise> exercises = (List<Exercise>) intent.getSerializableExtra(KeysIntents.EX_LIST);
         String dayName = intent.getStringExtra(KeysIntents.DAY_NAME);
 
-        System.out.println("counter number " + counterEx);
         timerTime = exercises.get(counterEx).getRest();
         mTimerLeft = timerTime;
 
@@ -112,9 +129,39 @@ public class ExersiceActivity extends AppCompatActivity {
         //navigation arrow btn
         btnNext.setOnClickListener(v->{
             if (crash) {
+
+                //get the recyclerview edit text and export to firebase store
+                RecyclerView.Adapter adapter1 = recyclerViewComponent.getAdapter();
+                int itemCount = adapter1.getItemCount();
+                System.out.println(itemCount);
+
+                List<ExersixeOneRawHistory> exersixeOneRawHistories = new ArrayList<>();
+                for (int i = 0; i < itemCount ; i++) {
+                    RecyclerView.ViewHolder viewHolderForAdapterPosition = recyclerViewComponent.findViewHolderForAdapterPosition(i);
+                    View view = recyclerView.getChildAt(i);
+                    EditText etRepit = (EditText) view.findViewById(R.id.ex_activity_recycler_repit);
+                    int repit = Integer.parseInt(etRepit.getText().toString());
+
+                    EditText etKG = (EditText) view.findViewById(R.id.ex_activity_recycler_kg);
+                    double kg = Integer.parseInt(etKG.getText().toString());
+
+                    exersixeOneRawHistories.add(new ExersixeOneRawHistory((i+1),repit,kg));
+                }
+
+                System.out.println(exersixeOneRawHistories);
+
+                ExerciseHistory exerciseHistory = new ExerciseHistory("17/02/2019", exersixeOneRawHistories);
+
+                //todo: לחשוב איך לסדר את הדאטא כמו שצריך
+                System.out.println(exerciseHistory);
+                Task<Void> saveOnDB = fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA + fAuth.getUid()).document(exercise.getExName()).set(exerciseHistory);
+
+
+
                 crash = false;
 
                 //change recycler
+
                 Exercise exerciseIN = exercises.get(++counterEx);
                 ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
                 recyclerView.setLayoutManager(new LinearLayoutManager(this));
