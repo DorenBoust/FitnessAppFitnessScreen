@@ -77,6 +77,8 @@ public class ExersiceFieldRecyclerAdapter extends RecyclerView.Adapter<ExersiceF
         }
     }
 
-
+    public String getExName(){
+        return exercise.getExName();
+    }
 
 }

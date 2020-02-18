@@ -384,4 +384,23 @@
         app:layout_constraintStart_toStartOf="@+id/guideline46"
         app:layout_constraintTop_toBottomOf="@+id/ex_activity_timer" />
 
+    <Button
+        android:id="@+id/btn_finish_ex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/btn_timer_stop"
+        android:fontFamily="@font/open_sans_hebrew_light"
+        android:text="סיים אימון"
+        android:textColor="@color/mainGreen"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ex_activity_title_exNumber"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_ex_activity_title_exName"
+        app:layout_constraintTop_toTopOf="@+id/tv_ex_activity_title_exName" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

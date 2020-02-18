@@ -6,6 +6,8 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -14,7 +16,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +53,7 @@ public class ExersiceActivity extends AppCompatActivity {
     //navigation ex btn
     private ImageView btnNext;
     private ImageView btnBack;
+    private Button btnFinishEx;
     private boolean crash = true;
 
     private TextView tvSets;
@@ -88,6 +94,7 @@ public class ExersiceActivity extends AppCompatActivity {
 
         btnBack = findViewById(R.id.iv_ex_activity_title_backGreen);
         btnNext = findViewById(R.id.iv_ex_activity_title_nextGreen);
+        btnFinishEx = findViewById(R.id.btn_finish_ex);
         tvDay = findViewById(R.id.tv_ex_activity_title_day);
         tvSets = findViewById(R.id.tv_ex_activity_details_set);
         tvRepit = findViewById(R.id.tv_ex_activity_details_repit);
@@ -105,6 +112,8 @@ public class ExersiceActivity extends AppCompatActivity {
         notificationManager = NotificationManagerCompat.from(this);
 
         recyclerViewComponent = findViewById(R.id.tv_ex_activity_details_recycler);
+
+
 
         //get data
         Intent intent = getIntent();
@@ -130,6 +139,8 @@ public class ExersiceActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v->{
             if (crash) {
 
+                boolean dialogstatus = true;
+
                 //get the recyclerview edit text and export to firebase store
                 RecyclerView.Adapter adapter1 = recyclerViewComponent.getAdapter();
                 int itemCount = adapter1.getItemCount();
@@ -139,22 +150,45 @@ public class ExersiceActivity extends AppCompatActivity {
                 for (int i = 0; i < itemCount ; i++) {
                     RecyclerView.ViewHolder viewHolderForAdapterPosition = recyclerViewComponent.findViewHolderForAdapterPosition(i);
                     View view = recyclerView.getChildAt(i);
+
                     EditText etRepit = (EditText) view.findViewById(R.id.ex_activity_recycler_repit);
-                    int repit = Integer.parseInt(etRepit.getText().toString());
+                    Integer repit = null;
+                    if (!etRepit.getText().toString().equals("")) {
+                        repit = Integer.parseInt(etRepit.getText().toString());
+                    }
 
                     EditText etKG = (EditText) view.findViewById(R.id.ex_activity_recycler_kg);
-                    double kg = Integer.parseInt(etKG.getText().toString());
+                    Double kg = null;
+                    if (!etKG.getText().toString().equals("")) {
+                        kg = Double.parseDouble(etKG.getText().toString());
+                    }
 
-                    exersixeOneRawHistories.add(new ExersixeOneRawHistory((i+1),repit,kg));
+                    if (kg != null && repit != null) {
+                        exersixeOneRawHistories.add(new ExersixeOneRawHistory((i + 1), repit, kg));
+                        if (i == itemCount - 1){
+                            dialogstatus = false;
+                        }
+                    }
+
                 }
+
+                if (dialogstatus){
+                    showDialog();
+                    return;
+                }
+
 
                 System.out.println(exersixeOneRawHistories);
 
                 ExerciseHistory exerciseHistory = new ExerciseHistory("17/02/2019", exersixeOneRawHistories);
+                List<ExerciseHistory> exerciseHistoryList = new ArrayList<>();
+                exerciseHistoryList.add(exerciseHistory);
 
-                //todo: לחשוב איך לסדר את הדאטא כמו שצריך
+                ExerciseHistoryToFIreBase exerciseHistoryToFIreBase = new ExerciseHistoryToFIreBase(exerciseHistoryList);
+
                 System.out.println(exerciseHistory);
-                Task<Void> saveOnDB = fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA + fAuth.getUid()).document(exercise.getExName()).set(exerciseHistory);
+                Task<Void> saveOnDB = fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA).document(fAuth.getUid())
+                        .collection(tvExName.getText().toString()).document("12.12.12").set(exerciseHistoryToFIreBase);
 
 
 
@@ -175,14 +209,16 @@ public class ExersiceActivity extends AppCompatActivity {
 
                     btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
                     btnNext.setVisibility(View.INVISIBLE);
+                    btnFinishEx.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidin));
+                    btnFinishEx.setVisibility(View.VISIBLE);
                 } else {
                     btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.ex_activity_next_button));
                 }
 
-                if (counterEx == 1){
-                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
-                    btnBack.setVisibility(View.VISIBLE);
-                }
+//                if (counterEx == 1){
+//                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
+//                    btnBack.setVisibility(View.VISIBLE);
+//                }
 
                 btnNext.postDelayed(new Runnable() {
                     @Override
@@ -195,39 +231,62 @@ public class ExersiceActivity extends AppCompatActivity {
 
 
         });
-        btnBack.setOnClickListener(v->{
-            if (crash) {
-                crash = false;
-                //change recycler
-                Exercise exerciseIN = exercises.get(--counterEx);
-                ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setAdapter(adapterIN);
 
-                //regular Component
-                regularComponents(exercises, dayName);
+        btnFinishEx.setOnClickListener(v->{
+            boolean dialogstatus = true;
 
+            //get the recyclerview edit text and export to firebase store
+            RecyclerView.Adapter adapter1 = recyclerViewComponent.getAdapter();
+            int itemCount = adapter1.getItemCount();
+            System.out.println(itemCount);
 
-                //display arrow
-                if (counterEx == 0) {
-                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
-                    btnBack.setVisibility(View.INVISIBLE);
-                } else {
-                    btnBack.setAnimation(AnimationUtils.loadAnimation(this, R.anim.ex_activity_back_button));
+            List<ExersixeOneRawHistory> exersixeOneRawHistories = new ArrayList<>();
+            for (int i = 0; i < itemCount ; i++) {
+                RecyclerView.ViewHolder viewHolderForAdapterPosition = recyclerViewComponent.findViewHolderForAdapterPosition(i);
+                View view = recyclerView.getChildAt(i);
+
+                EditText etRepit = (EditText) view.findViewById(R.id.ex_activity_recycler_repit);
+                Integer repit = null;
+                if (!etRepit.getText().toString().equals("")) {
+                    repit = Integer.parseInt(etRepit.getText().toString());
                 }
 
-                if (counterEx == exercises.size() - 2){
-                    btnNext.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
-                    btnNext.setVisibility(View.VISIBLE);
+                EditText etKG = (EditText) view.findViewById(R.id.ex_activity_recycler_kg);
+                Double kg = null;
+                if (!etKG.getText().toString().equals("")) {
+                    kg = Double.parseDouble(etKG.getText().toString());
                 }
 
-                btnBack.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        crash = true;
+                if (kg != null && repit != null) {
+                    exersixeOneRawHistories.add(new ExersixeOneRawHistory((i + 1), repit, kg));
+                    if (i == itemCount - 1){
+                        dialogstatus = false;
                     }
-                }, 500);
+                }
+
             }
+
+            if (dialogstatus){
+                showDialog();
+                return;
+            }
+
+
+            System.out.println(exersixeOneRawHistories);
+
+            ExerciseHistory exerciseHistory = new ExerciseHistory("17/02/2019", exersixeOneRawHistories);
+            List<ExerciseHistory> exerciseHistoryList = new ArrayList<>();
+            exerciseHistoryList.add(exerciseHistory);
+
+            ExerciseHistoryToFIreBase exerciseHistoryToFIreBase = new ExerciseHistoryToFIreBase(exerciseHistoryList);
+
+            System.out.println(exerciseHistory);
+            Task<Void> saveOnDB = fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA).document(fAuth.getUid())
+                    .collection(tvExName.getText().toString()).document("12.12.12").set(exerciseHistoryToFIreBase);
+
+
+
+            finish();
 
         });
 
@@ -362,6 +421,16 @@ public class ExersiceActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void showDialog(){
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View v = inflater.inflate(R.layout.finish_ex_alert_dialog, null);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setView(v).create();
+
+        alertDialog.show();
     }
 
 }
