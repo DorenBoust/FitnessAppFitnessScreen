@@ -1,6 +1,8 @@
 package com.example.fitnessapp.main;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,18 +35,27 @@ import com.example.fitnessapp.models.CustomMethods;
 import com.example.fitnessapp.user.Exercise;
 import com.example.fitnessapp.user.ExerciseHistory;
 import com.example.fitnessapp.user.ExersixeOneRawHistory;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+
+import javax.annotation.Nullable;
 
 import static com.example.fitnessapp.models.AppNotification.CHANNEL_1_ID;
 
@@ -85,6 +96,15 @@ public class ExersiceActivity extends AppCompatActivity {
     private RecyclerView recyclerViewComponent;
     private FirebaseAuth fAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
+    private RecyclerView.Adapter adapter1;
+    private int itemCount;
+
+
+    //history
+    private ImageView btnHistory;
+    private ConstraintLayout historyLayout;
+    private boolean historyClicked = false;
+
 
 
     @Override
@@ -113,6 +133,9 @@ public class ExersiceActivity extends AppCompatActivity {
 
         recyclerViewComponent = findViewById(R.id.tv_ex_activity_details_recycler);
 
+        btnHistory = findViewById(R.id.history_button);
+        historyLayout = findViewById(R.id.layout_history);
+
 
 
         //get data
@@ -125,19 +148,22 @@ public class ExersiceActivity extends AppCompatActivity {
 
 
 
+
+        //recycler recyclerViewComponent
+        Exercise exercise = exercises.get(counterEx);
+        ExersiceFieldRecyclerAdapter adapter = new ExersiceFieldRecyclerAdapter(exercise,getLayoutInflater());
+        System.out.println("number of ex " + exercise);
+        recyclerViewComponent.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewComponent.setAdapter(adapter);
+
         //regular component
         regularComponents(exercises,dayName);
 
-        //recycler
-        Exercise exercise = exercises.get(counterEx);
-        RecyclerView recyclerView = findViewById(R.id.tv_ex_activity_details_recycler);
-        ExersiceFieldRecyclerAdapter adapter = new ExersiceFieldRecyclerAdapter(exercise,getLayoutInflater());
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
 
         //navigation arrow btn
         btnNext.setOnClickListener(v->{
             if (crash) {
+
 
                 boolean dialogstatus = true;
 
@@ -149,9 +175,12 @@ public class ExersiceActivity extends AppCompatActivity {
                 List<ExersixeOneRawHistory> exersixeOneRawHistories = new ArrayList<>();
                 for (int i = 0; i < itemCount ; i++) {
                     RecyclerView.ViewHolder viewHolderForAdapterPosition = recyclerViewComponent.findViewHolderForAdapterPosition(i);
-                    View view = recyclerView.getChildAt(i);
+                    View view = recyclerViewComponent.getChildAt(i);
+                    System.out.println("number of i" + i);
 
+                    //TODO:CRASH ON 5 SETS!! Look why
                     EditText etRepit = (EditText) view.findViewById(R.id.ex_activity_recycler_repit);
+                    System.out.println(i);
                     Integer repit = null;
                     if (!etRepit.getText().toString().equals("")) {
                         repit = Integer.parseInt(etRepit.getText().toString());
@@ -180,7 +209,10 @@ public class ExersiceActivity extends AppCompatActivity {
 
                 System.out.println(exersixeOneRawHistories);
 
-                ExerciseHistory exerciseHistory = new ExerciseHistory("17/02/2019", exersixeOneRawHistories);
+                String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
+                System.out.println();
+
+                ExerciseHistory exerciseHistory = new ExerciseHistory(currentDate, exersixeOneRawHistories);
                 List<ExerciseHistory> exerciseHistoryList = new ArrayList<>();
                 exerciseHistoryList.add(exerciseHistory);
 
@@ -188,7 +220,7 @@ public class ExersiceActivity extends AppCompatActivity {
 
                 System.out.println(exerciseHistory);
                 Task<Void> saveOnDB = fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA).document(fAuth.getUid())
-                        .collection(tvExName.getText().toString()).document("12.12.12").set(exerciseHistoryToFIreBase);
+                        .collection(tvExName.getText().toString()).document(currentDate).set(exerciseHistoryToFIreBase);
 
 
 
@@ -198,8 +230,8 @@ public class ExersiceActivity extends AppCompatActivity {
 
                 Exercise exerciseIN = exercises.get(++counterEx);
                 ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
-                recyclerView.setLayoutManager(new LinearLayoutManager(this));
-                recyclerView.setAdapter(adapterIN);
+                recyclerViewComponent.setLayoutManager(new LinearLayoutManager(this));
+                recyclerViewComponent.setAdapter(adapterIN);
 
                 //regular Component
                 regularComponents(exercises, dayName);
@@ -243,7 +275,7 @@ public class ExersiceActivity extends AppCompatActivity {
             List<ExersixeOneRawHistory> exersixeOneRawHistories = new ArrayList<>();
             for (int i = 0; i < itemCount ; i++) {
                 RecyclerView.ViewHolder viewHolderForAdapterPosition = recyclerViewComponent.findViewHolderForAdapterPosition(i);
-                View view = recyclerView.getChildAt(i);
+                View view = recyclerViewComponent.getChildAt(i);
 
                 EditText etRepit = (EditText) view.findViewById(R.id.ex_activity_recycler_repit);
                 Integer repit = null;
@@ -312,7 +344,26 @@ public class ExersiceActivity extends AppCompatActivity {
         updateTimerText();
 
 
+        //history Layout
+
+        btnHistory.setOnClickListener(v->{
+            if (!historyClicked) {
+                historyLayout.setVisibility(View.VISIBLE);
+                historyLayout.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidin));
+
+                historyClicked = true;
+            } else {
+                historyLayout.setVisibility(View.INVISIBLE);
+                historyLayout.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidout));
+                historyClicked = false;
+
+            }
+
+        });
+
+
     }
+
 
 
 
@@ -389,6 +440,7 @@ public class ExersiceActivity extends AppCompatActivity {
     }
 
     private void regularComponents(List<Exercise> exercises, String dayName){
+        getHistoryExFromFirebase();
         Picasso.get().load(exercises.get(counterEx).getImage()).into(ivMainImage);
         tvDay.setText(CustomMethods.convertDateToHebrew(dayName));
         tvSets.setText(String.valueOf(exercises.get(counterEx).getSets()));
@@ -433,4 +485,30 @@ public class ExersiceActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
+    private void getHistoryExFromFirebase(){
+        List<ExerciseHistory> historyExersiceFromFirebase = new ArrayList<>();
+
+        fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA).document(fAuth.getUid())
+                .collection(tvExName.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                for (int i = 0; i < task.getResult().size() ; i++) {
+                    Map<String, Object> data = task.getResult().getDocuments().get(i).getData();
+                    System.out.println(data);
+
+                    Object exerciseHistories = data.get("exerciseHistories");
+//                            System.out.println(exerciseHistories);
+
+                    List<ExerciseHistory> ex1 = (List<ExerciseHistory>) data.get("exerciseHistories");
+                    historyExersiceFromFirebase.add(ex1.get(0));
+//                            System.out.println(historyExersiceFromFirebase.get(0));
+
+                }
+
+
+                System.out.println(tvExName.getText().toString() + " " + historyExersiceFromFirebase);
+            }
+        });
+
+    }
 }

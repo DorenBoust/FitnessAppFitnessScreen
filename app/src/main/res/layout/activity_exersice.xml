@@ -403,4 +403,26 @@
         app:layout_constraintStart_toEndOf="@+id/tv_ex_activity_title_exName"
         app:layout_constraintTop_toTopOf="@+id/tv_ex_activity_title_exName" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_history"
+        android:visibility="invisible"
+        android:background="@color/mainGreen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline41"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/history_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_ex_activity_title_exName2"
+        app:layout_constraintEnd_toStartOf="@+id/tv_ex_activity_title_exName2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/back_arrow_green" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
