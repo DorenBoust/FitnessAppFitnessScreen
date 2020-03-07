@@ -227,7 +227,6 @@ public class ExersiceActivity extends AppCompatActivity {
                 crash = false;
 
                 //change recycler
-
                 Exercise exerciseIN = exercises.get(++counterEx);
                 ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
                 recyclerViewComponent.setLayoutManager(new LinearLayoutManager(this));
@@ -507,8 +506,17 @@ public class ExersiceActivity extends AppCompatActivity {
 
 
                 System.out.println(tvExName.getText().toString() + " " + historyExersiceFromFirebase);
+                historyRecyclerView(historyExersiceFromFirebase);
             }
         });
+
+    }
+
+    private void historyRecyclerView(List<ExerciseHistory> exerciseHistory){
+        RecyclerView recyclerView = findViewById(R.id.history_recyclerview);
+        ExsercieHistoryRecyclerAdapter adapter = new ExsercieHistoryRecyclerAdapter(exerciseHistory, getLayoutInflater());
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
     }
 }

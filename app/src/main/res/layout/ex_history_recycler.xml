@@ -13,7 +13,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
-        android:background="@color/lightGreen"
+        android:background="@color/waite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,8 +49,8 @@
         android:layout_height="wrap_content"
         android:text="חזרות"
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/ex_activity_recycler_repit"
-        app:layout_constraintStart_toStartOf="@+id/ex_activity_recycler_repit"
+        app:layout_constraintEnd_toStartOf="@+id/guideline43"
+        app:layout_constraintStart_toStartOf="@+id/guideline43"
         app:layout_constraintTop_toTopOf="@+id/textView3" />
 
     <TextView
@@ -59,43 +59,9 @@
         android:layout_height="wrap_content"
         android:text='משקל (ק"ג) '
         android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="@+id/ex_activity_recycler_kg"
-        app:layout_constraintStart_toStartOf="@+id/ex_activity_recycler_kg"
-        app:layout_constraintTop_toTopOf="@+id/textView4" />
-
-    <EditText
-        android:id="@+id/ex_activity_recycler_repit"
-        android:layout_width="50dp"
-        android:layout_height="0dp"
-        android:backgroundTint="#00FFFFFF"
-        android:ems="10"
-        android:fontFamily="@font/open_sans_hebrew_regular"
-        android:gravity="center"
-        android:hint="-"
-        android:textColor="#ffffff"
-        android:inputType="number"
-        android:textColorHint="#ffffff"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/guideline43"
-        app:layout_constraintStart_toStartOf="@+id/guideline43"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/ex_activity_recycler_kg"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#00FFFFFF"
-        android:ems="10"
-        android:fontFamily="@font/open_sans_hebrew_regular"
-        android:gravity="center"
-        android:hint="-"
-        android:textColor="#ffffff"
-        android:inputType="number"
-        android:textColorHint="#ffffff"
-        android:textSize="24sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline42"
         app:layout_constraintStart_toStartOf="@+id/guideline42"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/textView4" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline42"
@@ -117,5 +83,27 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.75" />
+
+    <TextView
+        android:id="@+id/ex_history_recycler_repit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="5"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView4"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/ex_history_recycler_kg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/open_sans_hebrew_regular"
+        android:text="5"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView5"
+        app:layout_constraintStart_toStartOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

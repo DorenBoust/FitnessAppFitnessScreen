@@ -293,6 +293,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/ex_activity_recycler" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.Guideline
@@ -405,14 +406,55 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_history"
-        android:visibility="invisible"
-        android:background="@color/mainGreen"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/background_ex_history"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/guideline41"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/history_recyclerview"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/date_history" />
+
+        <ImageView
+            android:id="@+id/history_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/date_history"
+            app:layout_constraintStart_toEndOf="@+id/date_history"
+            app:layout_constraintTop_toTopOf="@+id/date_history"
+            app:srcCompat="@drawable/next_arrow_green" />
+
+        <ImageView
+            android:id="@+id/history_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/date_history"
+            app:layout_constraintEnd_toStartOf="@+id/date_history"
+            app:layout_constraintTop_toTopOf="@+id/date_history"
+            app:srcCompat="@drawable/back_arrow_green" />
+
+        <TextView
+            android:id="@+id/date_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/open_sans_hebrew_bold"
+            android:text="3-03-2020"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -11,22 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.fitnessapp.R;
-import com.example.fitnessapp.keys.KeysFirebaseStore;
 import com.example.fitnessapp.user.Exercise;
-import com.example.fitnessapp.user.ExerciseHistory;
-import com.example.fitnessapp.user.ExersixeOneRawHistory;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.security.Key;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class ExersiceFieldRecyclerAdapter extends RecyclerView.Adapter<ExersiceFieldRecyclerAdapter.FieldHolder> {
 
@@ -70,7 +55,7 @@ public class ExersiceFieldRecyclerAdapter extends RecyclerView.Adapter<ExersiceF
         public FieldHolder(@NonNull View itemView) {
             super(itemView);
 
-            tvSets = itemView.findViewById(R.id.ex_activity_recycler_set);
+            tvSets = itemView.findViewById(R.id.ex_history_recycler_set);
             etRepit = itemView.findViewById(R.id.ex_activity_recycler_repit);
             etKG = itemView.findViewById(R.id.ex_activity_recycler_kg);
             line = itemView.findViewById(R.id.ex_activity_recycler_line);
