@@ -35,19 +35,22 @@ public class ExsercieHistoryRecyclerAdapter extends RecyclerView.Adapter<Exserci
     @Override
     public void onBindViewHolder(@NonNull HistoryFieldHolder holder, int position) {
         holder.set.setText(String.valueOf(position+1));
-        System.out.println("In Recycler" + exerciseHistoryRoot);
-
-        System.out.println(exerciseHistoryRoot.get(0));
-
-        List<ExersixeOneRawHistory> exList = exerciseHistoryRoot.get(0).getExList();
-        System.out.println(exList);
-
+        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(0);
+        List<ExersixeOneRawHistory> exList = exerciseHistory.getExList();
+        for (int i = 0; i < exList.size() ; i++) {
+            ExersixeOneRawHistory exersixeOneRawHistory = exList.get(position);
+            holder.repit.setText(String.valueOf(exersixeOneRawHistory.getRepit()));
+            holder.kg.setText(String.valueOf(exersixeOneRawHistory.getKg()));
+        }
 
     }
 
     @Override
     public int getItemCount() {
-        return 1;
+        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(0);
+        List<ExersixeOneRawHistory> exList = exerciseHistory.getExList();
+
+        return exList.size();
     }
 
     public class HistoryFieldHolder extends RecyclerView.ViewHolder {

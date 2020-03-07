@@ -44,7 +44,14 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -485,36 +492,73 @@ public class ExersiceActivity extends AppCompatActivity {
     }
 
     private void getHistoryExFromFirebase(){
-        List<ExerciseHistory> historyExersiceFromFirebase = new ArrayList<>();
 
         fStore.collection(KeysFirebaseStore.EXERCISE_HISTORY_DATA).document(fAuth.getUid())
                 .collection(tvExName.getText().toString()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                List<ExerciseHistory> listExerciseHistory = new ArrayList<>();
+
                 for (int i = 0; i < task.getResult().size() ; i++) {
                     Map<String, Object> data = task.getResult().getDocuments().get(i).getData();
-                    System.out.println(data);
+                    System.out.println("Data ----- " +data);
+
+                    System.out.println("Name Class ------ " + data.getClass().getSimpleName());
 
                     Object exerciseHistories = data.get("exerciseHistories");
-//                            System.out.println(exerciseHistories);
+                    System.out.println("OBJECT --------- " + exerciseHistories);
 
-                    List<ExerciseHistory> ex1 = (List<ExerciseHistory>) data.get("exerciseHistories");
-                    historyExersiceFromFirebase.add(ex1.get(0));
-//                            System.out.println(historyExersiceFromFirebase.get(0));
+                    Gson gson = new Gson();
+                    String row = gson.toJson(exerciseHistories);
 
+                    System.out.println("JSON NEWWWWWWW ----- " + row);
+
+                    try {
+                        JSONArray jsonArray = new JSONArray(row);
+                        for (int j = 0; j < jsonArray.length() ; j++) {
+                            JSONObject jsonObject = (JSONObject) jsonArray.get(j);
+                            String jsonDate = (String) jsonObject.get("date");
+
+                            System.out.println(jsonDate);
+
+                            JSONArray jsonExList = (JSONArray) jsonObject.get("exList");
+
+                            List<ExersixeOneRawHistory> listExersixeOneRawHistory = new ArrayList<>();
+
+                            for (int k = 0; k < jsonExList.length() ; k++) {
+                                JSONObject jsonObject1 = (JSONObject) jsonExList.get(k);
+
+                                Integer jsonSet = (Integer) jsonObject1.get("set");
+
+                                Double jsonKG = (Double) jsonObject1.get("kg");
+
+                                Integer jsonRepit =(Integer) jsonObject1.get("repit");
+
+
+                                ExersixeOneRawHistory exersixeOneRawHistoryJSON = new ExersixeOneRawHistory(jsonSet,jsonRepit,jsonKG);
+                                listExersixeOneRawHistory.add(exersixeOneRawHistoryJSON);
+                            }
+
+                            ExerciseHistory exerciseHistoryJSON = new ExerciseHistory(jsonDate,listExersixeOneRawHistory);
+                            listExerciseHistory.add(exerciseHistoryJSON);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
 
-                System.out.println(tvExName.getText().toString() + " " + historyExersiceFromFirebase);
-                historyRecyclerView(historyExersiceFromFirebase);
+                historyRecyclerView(listExerciseHistory);
             }
         });
 
     }
 
-    private void historyRecyclerView(List<ExerciseHistory> exerciseHistory){
+    private void historyRecyclerView(List<ExerciseHistory> exerciseHistories){
         RecyclerView recyclerView = findViewById(R.id.history_recyclerview);
-        ExsercieHistoryRecyclerAdapter adapter = new ExsercieHistoryRecyclerAdapter(exerciseHistory, getLayoutInflater());
+        ExsercieHistoryRecyclerAdapter adapter = new ExsercieHistoryRecyclerAdapter(exerciseHistories, getLayoutInflater());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
