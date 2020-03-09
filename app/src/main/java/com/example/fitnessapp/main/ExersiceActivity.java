@@ -103,6 +103,8 @@ public class ExersiceActivity extends AppCompatActivity {
     private int counterHistoryBTN = 0;
     int getCorrectHistory;
     private List<ExerciseHistory> exerciseHistoryRoot;
+    private ImageView btnHistoryBack;
+    private ImageView btnHistoryNext;
 
 
 
@@ -137,6 +139,8 @@ public class ExersiceActivity extends AppCompatActivity {
         btnHistory = findViewById(R.id.history_button);
         historyLayout = findViewById(R.id.layout_history);
         tvDateHistory = findViewById(R.id.date_history_title);
+        btnHistoryBack = findViewById(R.id.history_back);
+        btnHistoryNext = findViewById(R.id.history_next);
 
 
 
@@ -234,10 +238,6 @@ public class ExersiceActivity extends AppCompatActivity {
                 ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
                 recyclerViewComponent.setLayoutManager(new LinearLayoutManager(this));
                 recyclerViewComponent.setAdapter(adapterIN);
-
-//                counterHistoryBTN = 0;
-//                int getCorrectHistory = exerciseHistoryRoot.size() - (counterHistoryBTN++) - 1;
-//                historyRecyclerView(exerciseHistoryRoot, getCorrectHistory);
 
 
                 //regular Component
@@ -375,6 +375,32 @@ public class ExersiceActivity extends AppCompatActivity {
                 historyLayout.setVisibility(View.INVISIBLE);
                 historyLayout.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidout));
                 historyClicked = false;
+
+            }
+
+        });
+
+        btnHistoryBack.setOnClickListener(v->{
+            btnHistoryNext.setVisibility(View.VISIBLE);
+
+              if (getCorrectHistory != 0) {
+                    historyRecyclerView(exerciseHistoryRoot, --getCorrectHistory);
+                    if (getCorrectHistory == 0){
+                        btnHistoryBack.setVisibility(View.INVISIBLE);
+                    }
+              }
+
+        });
+
+        btnHistoryNext.setOnClickListener(v->{
+            btnHistoryBack.setVisibility(View.VISIBLE);
+
+            if (getCorrectHistory != exerciseHistoryRoot.size() - 1) {
+                historyRecyclerView(exerciseHistoryRoot, ++getCorrectHistory);
+
+                if (getCorrectHistory == exerciseHistoryRoot.size() - 1){
+                    btnHistoryNext.setVisibility(View.INVISIBLE);
+                }
 
             }
 
@@ -562,8 +588,8 @@ public class ExersiceActivity extends AppCompatActivity {
                     }
                 }
                 exerciseHistoryRoot = listExerciseHistory;
-                counterHistoryBTN = 0;
-                getCorrectHistory = exerciseHistoryRoot.size() - (counterHistoryBTN++) - 1;
+                counterHistoryBTN = exerciseHistoryRoot.size();
+                getCorrectHistory = exerciseHistoryRoot.size() - 1;
                 historyRecyclerView(exerciseHistoryRoot, getCorrectHistory);
             }
         });

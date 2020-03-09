@@ -430,10 +430,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/date_history_title"
             app:layout_constraintStart_toEndOf="@+id/date_history_title"
             app:layout_constraintTop_toTopOf="@+id/date_history_title"
-            app:srcCompat="@drawable/next_arrow_green" />
+            app:srcCompat="@drawable/next_arrow_green"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/history_back"
