@@ -18,10 +18,12 @@ public class ExsercieHistoryRecyclerAdapter extends RecyclerView.Adapter<Exserci
 
     private List<ExerciseHistory> exerciseHistoryRoot;
     private LayoutInflater inflater;
+    private int dateCounter;
 
 
-    public ExsercieHistoryRecyclerAdapter(List<ExerciseHistory> exerciseHistory, LayoutInflater inflater) {
+    public ExsercieHistoryRecyclerAdapter(List<ExerciseHistory> exerciseHistory, int dateCounter, LayoutInflater inflater) {
         this.exerciseHistoryRoot = exerciseHistory;
+        this.dateCounter = dateCounter;
         this.inflater = inflater;
     }
 
@@ -35,7 +37,7 @@ public class ExsercieHistoryRecyclerAdapter extends RecyclerView.Adapter<Exserci
     @Override
     public void onBindViewHolder(@NonNull HistoryFieldHolder holder, int position) {
         holder.set.setText(String.valueOf(position+1));
-        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(0);
+        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(dateCounter);
         List<ExersixeOneRawHistory> exList = exerciseHistory.getExList();
         for (int i = 0; i < exList.size() ; i++) {
             ExersixeOneRawHistory exersixeOneRawHistory = exList.get(position);
@@ -47,7 +49,7 @@ public class ExsercieHistoryRecyclerAdapter extends RecyclerView.Adapter<Exserci
 
     @Override
     public int getItemCount() {
-        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(0);
+        ExerciseHistory exerciseHistory = exerciseHistoryRoot.get(dateCounter);
         List<ExersixeOneRawHistory> exList = exerciseHistory.getExList();
 
         return exList.size();

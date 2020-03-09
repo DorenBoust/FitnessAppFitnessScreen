@@ -9,9 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -20,8 +18,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -38,15 +34,9 @@ import com.example.fitnessapp.user.ExersixeOneRawHistory;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -56,13 +46,10 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-
-import javax.annotation.Nullable;
 
 import static com.example.fitnessapp.models.AppNotification.CHANNEL_1_ID;
 
@@ -99,18 +86,24 @@ public class ExersiceActivity extends AppCompatActivity {
     //notification
     private NotificationManagerCompat notificationManager;
 
-    //recyclerview
+    //recyclerview field details
     private RecyclerView recyclerViewComponent;
     private FirebaseAuth fAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private RecyclerView.Adapter adapter1;
     private int itemCount;
+    private ConstraintLayout layoutOfRecyclerFieldDetails;
 
 
     //history
     private ImageView btnHistory;
     private ConstraintLayout historyLayout;
     private boolean historyClicked = false;
+    private TextView tvDateHistory;
+    private int counterHistoryBTN = 0;
+    int getCorrectHistory;
+    private List<ExerciseHistory> exerciseHistoryRoot;
+
 
 
 
@@ -139,9 +132,11 @@ public class ExersiceActivity extends AppCompatActivity {
         notificationManager = NotificationManagerCompat.from(this);
 
         recyclerViewComponent = findViewById(R.id.tv_ex_activity_details_recycler);
+        layoutOfRecyclerFieldDetails = findViewById(R.id.layout_field_details_for_history);
 
         btnHistory = findViewById(R.id.history_button);
         historyLayout = findViewById(R.id.layout_history);
+        tvDateHistory = findViewById(R.id.date_history_title);
 
 
 
@@ -165,6 +160,7 @@ public class ExersiceActivity extends AppCompatActivity {
 
         //regular component
         regularComponents(exercises,dayName);
+        getHistoryExFromFirebase();
 
 
         //navigation arrow btn
@@ -233,11 +229,16 @@ public class ExersiceActivity extends AppCompatActivity {
 
                 crash = false;
 
-                //change recycler
+                //change recycler field data
                 Exercise exerciseIN = exercises.get(++counterEx);
                 ExersiceFieldRecyclerAdapter adapterIN = new ExersiceFieldRecyclerAdapter(exerciseIN, getLayoutInflater());
                 recyclerViewComponent.setLayoutManager(new LinearLayoutManager(this));
                 recyclerViewComponent.setAdapter(adapterIN);
+
+//                counterHistoryBTN = 0;
+//                int getCorrectHistory = exerciseHistoryRoot.size() - (counterHistoryBTN++) - 1;
+//                historyRecyclerView(exerciseHistoryRoot, getCorrectHistory);
+
 
                 //regular Component
                 regularComponents(exercises, dayName);
@@ -266,6 +267,10 @@ public class ExersiceActivity extends AppCompatActivity {
                 }, 500);
             }
 
+
+            //change recycler history
+            getHistoryExFromFirebase();
+            System.out.println("getHistory TURNON");
 
 
         });
@@ -355,10 +360,18 @@ public class ExersiceActivity extends AppCompatActivity {
         btnHistory.setOnClickListener(v->{
             if (!historyClicked) {
                 historyLayout.setVisibility(View.VISIBLE);
-                historyLayout.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidin));
+                historyLayout.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
+
+                layoutOfRecyclerFieldDetails.setVisibility(View.INVISIBLE);
+                layoutOfRecyclerFieldDetails.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidout));
 
                 historyClicked = true;
+
             } else {
+                layoutOfRecyclerFieldDetails.setVisibility(View.VISIBLE);
+                layoutOfRecyclerFieldDetails.setAnimation(AnimationUtils.loadAnimation(this, R.anim.faidin));
+
+
                 historyLayout.setVisibility(View.INVISIBLE);
                 historyLayout.setAnimation(AnimationUtils.loadAnimation(this,R.anim.faidout));
                 historyClicked = false;
@@ -372,7 +385,7 @@ public class ExersiceActivity extends AppCompatActivity {
 
 
 
-
+    //mthods
     private void startTimer(){
         timerCount = new CountDownTimer(mTimerLeft,1_000) {
             @Override
@@ -446,7 +459,7 @@ public class ExersiceActivity extends AppCompatActivity {
     }
 
     private void regularComponents(List<Exercise> exercises, String dayName){
-        getHistoryExFromFirebase();
+//        getHistoryExFromFirebase();
         Picasso.get().load(exercises.get(counterEx).getImage()).into(ivMainImage);
         tvDay.setText(CustomMethods.convertDateToHebrew(dayName));
         tvSets.setText(String.valueOf(exercises.get(counterEx).getSets()));
@@ -548,19 +561,21 @@ public class ExersiceActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-
-
-                historyRecyclerView(listExerciseHistory);
+                exerciseHistoryRoot = listExerciseHistory;
+                counterHistoryBTN = 0;
+                getCorrectHistory = exerciseHistoryRoot.size() - (counterHistoryBTN++) - 1;
+                historyRecyclerView(exerciseHistoryRoot, getCorrectHistory);
             }
         });
 
     }
 
-    private void historyRecyclerView(List<ExerciseHistory> exerciseHistories){
+    private void historyRecyclerView(List<ExerciseHistory> exerciseHistories, int dateCounter){
         RecyclerView recyclerView = findViewById(R.id.history_recyclerview);
-        ExsercieHistoryRecyclerAdapter adapter = new ExsercieHistoryRecyclerAdapter(exerciseHistories, getLayoutInflater());
+        ExsercieHistoryRecyclerAdapter adapter = new ExsercieHistoryRecyclerAdapter(exerciseHistories, dateCounter, getLayoutInflater());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        tvDateHistory.setText(exerciseHistories.get(dateCounter).getDate());
 
     }
 }

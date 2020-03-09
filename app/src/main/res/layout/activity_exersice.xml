@@ -274,7 +274,7 @@
         app:layout_constraintGuide_percent="0.41" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/layout_field_details_for_history"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -409,11 +409,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/background_ex_history"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline41"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/constraintLayout2">
+        app:layout_constraintTop_toTopOf="@+id/layout_field_details_for_history">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/history_recyclerview"
@@ -423,16 +423,16 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/date_history" />
+            app:layout_constraintTop_toBottomOf="@+id/date_history_title" />
 
         <ImageView
             android:id="@+id/history_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/date_history"
-            app:layout_constraintStart_toEndOf="@+id/date_history"
-            app:layout_constraintTop_toTopOf="@+id/date_history"
+            app:layout_constraintBottom_toBottomOf="@+id/date_history_title"
+            app:layout_constraintStart_toEndOf="@+id/date_history_title"
+            app:layout_constraintTop_toTopOf="@+id/date_history_title"
             app:srcCompat="@drawable/next_arrow_green" />
 
         <ImageView
@@ -440,13 +440,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/date_history"
-            app:layout_constraintEnd_toStartOf="@+id/date_history"
-            app:layout_constraintTop_toTopOf="@+id/date_history"
+            app:layout_constraintBottom_toBottomOf="@+id/date_history_title"
+            app:layout_constraintEnd_toStartOf="@+id/date_history_title"
+            app:layout_constraintTop_toTopOf="@+id/date_history_title"
             app:srcCompat="@drawable/back_arrow_green" />
 
         <TextView
-            android:id="@+id/date_history"
+            android:id="@+id/date_history_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
